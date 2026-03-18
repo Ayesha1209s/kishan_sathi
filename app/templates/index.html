@@ -1,0 +1,779 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Kishan Sathi – AI Crop Disease Detection</title>
+  <link rel="stylesheet" href="{% static 'css/style.css' %}">
+  <!-- =============================================
+       🌱 KISHAN SATHI – AI CROP DISEASE DETECTION
+       Single Page Application – index.html
+       ============================================= -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+</head>
+<body>
+
+<!-- ══════════════════════════════════════════
+     🔝 FIXED NAVIGATION BAR
+══════════════════════════════════════════ -->
+<nav class="navbar" id="navbar">
+  <div class="nav-brand" onclick="showSection('home')">
+    <span class="brand-leaf">🌱</span>
+    <span class="brand-text">Kishan<em>Sathi</em></span>
+  </div>
+
+  <div class="nav-links" id="navLinks">
+    <a class="nav-link active" data-section="home" onclick="showSection('home')">Home</a>
+    <a class="nav-link" data-section="dashboard" onclick="showSection('dashboard')">Dashboard</a>
+    <a class="nav-link" data-section="upload" onclick="showSection('upload')">Upload</a>
+    <a class="nav-link" data-section="history" onclick="showSection('history')">History</a>
+    <a class="nav-link" data-section="profile" onclick="showSection('profile')">Profile</a>
+    <a class="nav-link" data-section="settings" onclick="showSection('settings')">Settings</a>
+  </div>
+
+  <div class="nav-actions">
+    <!-- 🔔 Notification Bell -->
+    <div class="notif-wrapper" id="notifWrapper">
+      <button class="icon-btn" onclick="toggleNotifications()" title="Notifications">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/>
+          <path d="M13.73 21a2 2 0 0 1-3.46 0"/>
+        </svg>
+        <span class="notif-dot" id="notifDot"></span>
+      </button>
+      <div class="notif-dropdown" id="notifDropdown">
+        <div class="notif-header">
+          <span>Notifications</span>
+          <button class="mark-read" onclick="clearNotifications()">Mark all read</button>
+        </div>
+        <div class="notif-item unread">
+          <span class="notif-icon">🌾</span>
+          <div>
+            <p>New disease pattern detected in your region</p>
+            <small>2 min ago</small>
+          </div>
+        </div>
+        <div class="notif-item unread">
+          <span class="notif-icon">✅</span>
+          <div>
+            <p>Analysis complete – Wheat Rust detected</p>
+            <small>1 hour ago</small>
+          </div>
+        </div>
+        <div class="notif-item">
+          <span class="notif-icon">📢</span>
+          <div>
+            <p>Kishan Sathi v2.1 is now live!</p>
+            <small>Yesterday</small>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 🌙 Dark Mode Toggle -->
+    <button class="icon-btn theme-toggle" onclick="toggleTheme()" title="Toggle Dark Mode" id="themeBtn">
+      <svg class="sun-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/>
+        <line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/>
+        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/>
+        <line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/>
+        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
+      </svg>
+      <svg class="moon-icon hidden" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+      </svg>
+    </button>
+
+    <!-- Login/Logout -->
+    <button class="btn-nav-auth" id="authNavBtn" onclick="showSection('auth')">Login</button>
+
+    <!-- Hamburger -->
+    <button class="hamburger" id="hamburger" onclick="toggleMobileMenu()">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</nav>
+
+<!-- ══════════════════════════════════════════
+     🏠 SECTION 1: HOME
+══════════════════════════════════════════ -->
+<section id="section-home" class="section active">
+  <div class="hero">
+    <div class="hero-bg-shapes">
+      <div class="shape shape1"></div>
+      <div class="shape shape2"></div>
+      <div class="shape shape3"></div>
+    </div>
+    <div class="hero-content">
+      <div class="hero-badge">🌾 AI-Powered Agriculture</div>
+      <h1 class="hero-title">Protect Your Crops<br/><em>with Intelligence</em></h1>
+      <p class="hero-sub">Upload a photo of your crop, and our AI instantly detects diseases, provides confidence scores, and suggests treatment — empowering every farmer with cutting-edge tech.</p>
+      <div class="hero-cta">
+        <button class="btn-primary" onclick="showSection('upload')">
+          <span>Start Analyzing</span>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </button>
+        <button class="btn-ghost" onclick="showSection('dashboard')">View Dashboard</button>
+      </div>
+      <div class="hero-stats">
+        <div class="hstat"><strong>98.4%</strong><span>Accuracy</span></div>
+        <div class="hstat-divider"></div>
+        <div class="hstat"><strong>50K+</strong><span>Analyses</span></div>
+        <div class="hstat-divider"></div>
+        <div class="hstat"><strong>120+</strong><span>Diseases</span></div>
+      </div>
+    </div>
+    <div class="hero-visual">
+      <div class="hero-img-card">
+        <div class="hero-img-placeholder">
+          <div class="leaf-anim">🌿</div>
+          <p>Farmer in the Field</p>
+          <small>Crop Disease Detection in Action</small>
+        </div>
+        <div class="floating-badge fb1">🔬 AI Analysis</div>
+        <div class="floating-badge fb2">✅ 98% Confident</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Features Strip -->
+  <div class="features-strip">
+    <div class="feature-card">
+      <span class="feat-icon">⚡</span>
+      <h3>Instant Detection</h3>
+      <p>Results in under 3 seconds using our custom deep-learning model trained on 500K+ crop images.</p>
+    </div>
+    <div class="feature-card">
+      <span class="feat-icon">🌍</span>
+      <h3>Multi-Crop Support</h3>
+      <p>Supports Rice, Wheat, Maize, Potato, Tomato, Cotton and 20+ other major Indian crops.</p>
+    </div>
+    <div class="feature-card">
+      <span class="feat-icon">💊</span>
+      <h3>Treatment Advice</h3>
+      <p>Along with diagnosis, receive specific pesticide and organic remedy recommendations.</p>
+    </div>
+    <div class="feature-card">
+      <span class="feat-icon">📱</span>
+      <h3>Works Offline</h3>
+      <p>Mobile-first design that caches models locally for rural areas with limited connectivity.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════
+     🔐 SECTION 2: AUTHENTICATION
+══════════════════════════════════════════ -->
+<section id="section-auth" class="section">
+  <div class="auth-wrapper">
+    <div class="auth-left">
+      <div class="auth-brand">
+        <span>🌱</span>
+        <h2>Kishan Sathi</h2>
+      </div>
+      <h3>Join 50,000+ farmers<br/>protecting their harvest</h3>
+      <ul class="auth-perks">
+        <li>✅ Free crop disease detection</li>
+        <li>✅ Full analysis history</li>
+        <li>✅ Expert treatment recommendations</li>
+        <li>✅ Regional disease alerts</li>
+      </ul>
+      <div class="auth-decor">🌾🌿🍃</div>
+    </div>
+    <div class="auth-right">
+      <!-- Toggle Tabs -->
+      <div class="auth-tabs">
+        <button class="auth-tab active" id="loginTab" onclick="switchAuthForm('login')">Login</button>
+        <button class="auth-tab" id="signupTab" onclick="switchAuthForm('signup')">Sign Up</button>
+      </div>
+
+      <!-- Login Form -->
+      <div class="auth-form" id="loginForm">
+        <h2>Welcome Back 👋</h2>
+        <p class="form-sub">Sign in to continue your crop analysis</p>
+        <div class="form-group">
+          <label>Email Address</label>
+          <input type="email" placeholder="farmer@example.com" class="form-input"/>
+        </div>
+        <div class="form-group">
+          <label>Password</label>
+          <input type="password" placeholder="••••••••" class="form-input"/>
+        </div>
+        <div class="form-row-flex">
+          <label class="check-label"><input type="checkbox"/> Remember me</label>
+          <a href="#" class="link-text">Forgot Password?</a>
+        </div>
+        <button class="btn-primary full" onclick="simulateLogin()">Sign In</button>
+        <div class="divider"><span>or continue with</span></div>
+        <div class="social-btns">
+          <button class="social-btn">🌐 Google</button>
+          <button class="social-btn">📱 Phone OTP</button>
+        </div>
+      </div>
+
+      <!-- Signup Form -->
+      <div class="auth-form hidden" id="signupForm">
+        <h2>Create Account 🌱</h2>
+        <p class="form-sub">Start protecting your crops today</p>
+        <div class="form-row-2">
+          <div class="form-group">
+            <label>First Name</label>
+            <input type="text" placeholder="Ramesh" class="form-input"/>
+          </div>
+          <div class="form-group">
+            <label>Last Name</label>
+            <input type="text" placeholder="Patel" class="form-input"/>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Email Address</label>
+          <input type="email" placeholder="farmer@example.com" class="form-input"/>
+        </div>
+        <div class="form-group">
+          <label>Phone Number</label>
+          <input type="tel" placeholder="+91 9876543210" class="form-input"/>
+        </div>
+        <div class="form-group">
+          <label>State / Region</label>
+          <select class="form-input">
+            <option>Select your state</option>
+            <option>Odisha</option>
+            <option>Punjab</option>
+            <option>Maharashtra</option>
+            <option>Uttar Pradesh</option>
+            <option>Karnataka</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Password</label>
+          <input type="password" placeholder="Create a strong password" class="form-input"/>
+        </div>
+        <button class="btn-primary full" onclick="simulateLogin()">Create Account</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════
+     📊 SECTION 3: DASHBOARD
+══════════════════════════════════════════ -->
+<section id="section-dashboard" class="section">
+  <div class="section-inner">
+    <div class="section-header">
+      <div>
+        <h2>Dashboard</h2>
+        <p class="section-sub">Welcome back, <strong>Ramesh Patel</strong> 👋 — Here's your farm summary</p>
+      </div>
+      <button class="btn-primary" onclick="showSection('upload')">+ New Analysis</button>
+    </div>
+
+    <!-- Stats Cards -->
+    <div class="stats-grid">
+      <div class="stat-card green">
+        <div class="stat-icon">📷</div>
+        <div class="stat-info">
+          <span class="stat-num" data-count="142">0</span>
+          <span class="stat-label">Total Uploads</span>
+        </div>
+        <div class="stat-trend up">↑ 12% this week</div>
+      </div>
+      <div class="stat-card teal">
+        <div class="stat-icon">✅</div>
+        <div class="stat-info">
+          <span class="stat-num" data-count="98">0</span><span class="stat-pct">%</span>
+          <span class="stat-label">Success Rate</span>
+        </div>
+        <div class="stat-trend up">↑ 2% this month</div>
+      </div>
+      <div class="stat-card amber">
+        <div class="stat-icon">⚠️</div>
+        <div class="stat-info">
+          <span class="stat-num" data-count="8">0</span>
+          <span class="stat-label">Diseases Found</span>
+        </div>
+        <div class="stat-trend down">↓ 3 less than last week</div>
+      </div>
+      <div class="stat-card blue">
+        <div class="stat-icon">🌾</div>
+        <div class="stat-info">
+          <span class="stat-num" data-count="5">0</span>
+          <span class="stat-label">Crop Types</span>
+        </div>
+        <div class="stat-trend neutral">— Stable</div>
+      </div>
+    </div>
+
+    <!-- Recent Activity + Chart -->
+    <div class="dash-grid-2">
+      <div class="dash-card">
+        <h3 class="card-title">📋 Recent Activity</h3>
+        <div class="activity-list">
+          <div class="act-item">
+            <div class="act-img">🌾</div>
+            <div class="act-info">
+              <strong>Wheat Leaf Rust</strong>
+              <span>Confidence: 94% | 2 hours ago</span>
+            </div>
+            <span class="badge badge-red">Disease</span>
+          </div>
+          <div class="act-item">
+            <div class="act-img">🌽</div>
+            <div class="act-info">
+              <strong>Maize — Healthy</strong>
+              <span>Confidence: 99% | Yesterday</span>
+            </div>
+            <span class="badge badge-green">Healthy</span>
+          </div>
+          <div class="act-item">
+            <div class="act-img">🍅</div>
+            <div class="act-info">
+              <strong>Tomato Late Blight</strong>
+              <span>Confidence: 87% | 3 days ago</span>
+            </div>
+            <span class="badge badge-red">Disease</span>
+          </div>
+          <div class="act-item">
+            <div class="act-img">🥔</div>
+            <div class="act-info">
+              <strong>Potato — Healthy</strong>
+              <span>Confidence: 96% | 4 days ago</span>
+            </div>
+            <span class="badge badge-green">Healthy</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="dash-card">
+        <h3 class="card-title">📊 Weekly Analysis Chart</h3>
+        <div class="mini-chart">
+          <div class="bar-group">
+            <div class="bar-wrap"><div class="bar" style="--h:60%"><span>Mon</span></div></div>
+            <div class="bar-wrap"><div class="bar" style="--h:80%"><span>Tue</span></div></div>
+            <div class="bar-wrap"><div class="bar" style="--h:45%"><span>Wed</span></div></div>
+            <div class="bar-wrap"><div class="bar" style="--h:95%"><span>Thu</span></div></div>
+            <div class="bar-wrap"><div class="bar" style="--h:70%"><span>Fri</span></div></div>
+            <div class="bar-wrap"><div class="bar" style="--h:55%"><span>Sat</span></div></div>
+            <div class="bar-wrap"><div class="bar" style="--h:88%"><span>Sun</span></div></div>
+          </div>
+        </div>
+        <div class="chart-legend">
+          <span class="leg-item"><i class="leg-dot green-dot"></i> Healthy</span>
+          <span class="leg-item"><i class="leg-dot red-dot"></i> Disease</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Disease Distribution -->
+    <div class="dash-card full-width">
+      <h3 class="card-title">🦠 Common Diseases Detected (This Month)</h3>
+      <div class="disease-bars">
+        <div class="dis-row"><span>Wheat Leaf Rust</span><div class="dis-bar-wrap"><div class="dis-bar" style="--w:78%">78%</div></div></div>
+        <div class="dis-row"><span>Tomato Late Blight</span><div class="dis-bar-wrap"><div class="dis-bar" style="--w:55%">55%</div></div></div>
+        <div class="dis-row"><span>Rice Blast</span><div class="dis-bar-wrap"><div class="dis-bar" style="--w:40%">40%</div></div></div>
+        <div class="dis-row"><span>Corn Smut</span><div class="dis-bar-wrap"><div class="dis-bar" style="--w:25%">25%</div></div></div>
+        <div class="dis-row"><span>Potato Blight</span><div class="dis-bar-wrap"><div class="dis-bar" style="--w:18%">18%</div></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════
+     📷 SECTION 4: UPLOAD (CORE FEATURE)
+══════════════════════════════════════════ -->
+<section id="section-upload" class="section">
+  <div class="section-inner narrow">
+    <div class="section-header centered">
+      <h2>Analyze Your Crop</h2>
+      <p class="section-sub">Upload a clear photo of the affected leaf or plant. Our AI will diagnose it instantly.</p>
+    </div>
+
+    <!-- Drag & Drop Zone -->
+    <div class="upload-zone" id="uploadZone"
+         ondragover="dragOver(event)" ondragleave="dragLeave(event)" ondrop="dropFile(event)">
+      <div class="upload-idle" id="uploadIdle">
+        <div class="upload-icon">📸</div>
+        <h3>Drag & Drop your crop image here</h3>
+        <p>or click to browse files</p>
+        <p class="upload-hint">Supports: JPG, PNG, WEBP — Max 10MB</p>
+        <button class="btn-primary" onclick="document.getElementById('fileInput').click()">Choose File</button>
+      </div>
+      <div class="upload-preview hidden" id="uploadPreview">
+        <img id="previewImg" src="" alt="Preview"/>
+        <div class="preview-info">
+          <span id="previewFileName">filename.jpg</span>
+          <button class="remove-btn" onclick="clearUpload()">✕ Remove</button>
+        </div>
+      </div>
+      <input type="file" id="fileInput" accept="image/*" class="hidden" onchange="handleFileSelect(event)"/>
+    </div>
+
+    <!-- Crop Type Selector -->
+    <div class="crop-selector">
+      <label>🌾 Crop Type (Optional — helps accuracy)</label>
+      <div class="crop-chips">
+        <button class="chip active" onclick="selectCrop(this)">Auto Detect</button>
+        <button class="chip" onclick="selectCrop(this)">🌾 Wheat</button>
+        <button class="chip" onclick="selectCrop(this)">🍚 Rice</button>
+        <button class="chip" onclick="selectCrop(this)">🌽 Maize</button>
+        <button class="chip" onclick="selectCrop(this)">🍅 Tomato</button>
+        <button class="chip" onclick="selectCrop(this)">🥔 Potato</button>
+        <button class="chip" onclick="selectCrop(this)">🌱 Other</button>
+      </div>
+    </div>
+
+    <!-- Analyze Button -->
+    <div class="analyze-btn-wrap">
+      <button class="btn-analyze" id="analyzeBtn" onclick="startAnalysis()">
+        <span id="analyzeBtnText">🔬 Analyze Now</span>
+        <div class="spinner hidden" id="analyzeSpinner"></div>
+      </button>
+    </div>
+
+    <!-- Loading Animation (full) -->
+    <div class="analysis-loading hidden" id="analysisLoading">
+      <div class="loader-container">
+        <div class="loader-ring"></div>
+        <div class="loader-ring r2"></div>
+        <div class="loader-ring r3"></div>
+        <span class="loader-leaf">🍃</span>
+      </div>
+      <h3 id="loadingText">Preprocessing image...</h3>
+      <div class="loading-steps">
+        <div class="lstep" id="lstep1">✅ Image loaded</div>
+        <div class="lstep pending" id="lstep2">⏳ Running AI model...</div>
+        <div class="lstep pending" id="lstep3">⏳ Generating heatmap...</div>
+        <div class="lstep pending" id="lstep4">⏳ Preparing results...</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════
+     📈 SECTION 5: RESULTS
+══════════════════════════════════════════ -->
+<section id="section-result" class="section">
+  <div class="section-inner">
+    <div class="section-header">
+      <div>
+        <h2>Analysis Results</h2>
+        <p class="section-sub">AI diagnosis complete — review your crop health report below</p>
+      </div>
+      <div class="result-actions">
+        <button class="btn-ghost" onclick="showSection('upload')">+ New Analysis</button>
+        <button class="btn-primary" onclick="downloadPDF()">⬇ Download PDF</button>
+      </div>
+    </div>
+
+    <div class="result-grid">
+      <!-- Uploaded Image + Heatmap -->
+      <div class="result-img-panel">
+        <div class="result-tabs">
+          <button class="rtab active" onclick="switchResultTab('original', this)">Original</button>
+          <button class="rtab" onclick="switchResultTab('heatmap', this)">Heatmap</button>
+        </div>
+        <div class="result-img-wrap" id="resultImgWrap">
+          <img id="resultImg" src="" alt="Analyzed Crop"/>
+          <div class="heatmap-overlay hidden" id="heatmapOverlay">
+            <div class="heatmap-demo">
+              <div class="hspot h1"></div>
+              <div class="hspot h2"></div>
+              <div class="hspot h3"></div>
+            </div>
+          </div>
+        </div>
+        <p class="img-caption" id="imgCaption">wheat_leaf_sample.jpg</p>
+      </div>
+
+      <!-- Disease Info -->
+      <div class="result-info-panel">
+        <div class="result-disease-card">
+          <div class="disease-header">
+            <span class="disease-status-icon">⚠️</span>
+            <div>
+              <h3 id="diseaseName">Wheat Leaf Rust</h3>
+              <span class="disease-sci" id="diseaseSci">Puccinia triticina</span>
+            </div>
+            <span class="severity-badge" id="severityBadge">High Severity</span>
+          </div>
+
+          <!-- Confidence Score -->
+          <div class="confidence-block">
+            <div class="conf-label">
+              <span>Confidence Score</span>
+              <strong id="confScore">94%</strong>
+            </div>
+            <div class="conf-bar-wrap">
+              <div class="conf-bar" id="confBar" style="--conf:94%"></div>
+            </div>
+          </div>
+
+          <!-- Secondary Predictions -->
+          <div class="alt-predictions">
+            <p class="alt-title">Other possibilities:</p>
+            <div class="alt-row">
+              <span>Powdery Mildew</span>
+              <div class="alt-bar-wrap"><div class="alt-bar" style="--w:4%"></div></div>
+              <span>4%</span>
+            </div>
+            <div class="alt-row">
+              <span>Healthy</span>
+              <div class="alt-bar-wrap"><div class="alt-bar" style="--w:2%"></div></div>
+              <span>2%</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Explanation -->
+        <div class="result-explain-card">
+          <h4>🔬 About This Disease</h4>
+          <p id="diseaseExplanation">Wheat Leaf Rust is a fungal disease caused by <em>Puccinia triticina</em>. It manifests as orange-brown pustules on the leaf surface, reducing photosynthesis and grain yield by up to 30% if untreated.</p>
+        </div>
+
+        <!-- Treatment -->
+        <div class="result-treatment-card">
+          <h4>💊 Recommended Treatment</h4>
+          <div class="treatment-list">
+            <div class="treat-item">
+              <span class="treat-icon">🧪</span>
+              <div><strong>Propiconazole 25% EC</strong><p>Apply 1 ml/litre of water. Spray on affected leaves twice at 15-day intervals.</p></div>
+            </div>
+            <div class="treat-item">
+              <span class="treat-icon">🌿</span>
+              <div><strong>Organic Alternative</strong><p>Neem oil spray (5 ml/litre) as a preventive measure. Effective in early-stage infection.</p></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════
+     📂 SECTION 6: HISTORY
+══════════════════════════════════════════ -->
+<section id="section-history" class="section">
+  <div class="section-inner">
+    <div class="section-header">
+      <div><h2>Analysis History</h2><p class="section-sub">Browse all your past crop analyses</p></div>
+      <button class="btn-primary" onclick="showSection('upload')">+ New Analysis</button>
+    </div>
+
+    <!-- Search & Filter -->
+    <div class="history-controls">
+      <div class="search-wrap">
+        <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+        </svg>
+        <input type="text" class="search-input" placeholder="Search by crop, disease..." id="historySearch" oninput="filterHistory()"/>
+      </div>
+      <select class="filter-select" id="historyFilter" onchange="filterHistory()">
+        <option value="all">All Results</option>
+        <option value="disease">Disease Found</option>
+        <option value="healthy">Healthy</option>
+        <option value="wheat">Wheat</option>
+        <option value="rice">Rice</option>
+        <option value="tomato">Tomato</option>
+      </select>
+      <select class="filter-select">
+        <option>Last 30 days</option>
+        <option>Last 7 days</option>
+        <option>Last 3 months</option>
+        <option>All time</option>
+      </select>
+    </div>
+
+    <!-- History Cards -->
+    <div class="history-grid" id="historyGrid">
+      <!-- Populated by JS -->
+    </div>
+    <div class="no-results hidden" id="noResults">🔍 No matching results found.</div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════
+     👤 SECTION 7: PROFILE
+══════════════════════════════════════════ -->
+<section id="section-profile" class="section">
+  <div class="section-inner narrow">
+    <div class="profile-header-card">
+      <div class="profile-avatar-wrap">
+        <div class="profile-avatar">
+          <span>R</span>
+          <button class="avatar-edit" title="Change Photo">📷</button>
+        </div>
+      </div>
+      <div class="profile-info">
+        <h2>Ramesh Patel</h2>
+        <p class="profile-bio">Wheat and maize farmer from Odisha. Using Kishan Sathi since 2023 to protect my 12-acre farm from seasonal crop diseases.</p>
+        <div class="profile-tags">
+          <span class="tag">🌾 Wheat Farmer</span>
+          <span class="tag">📍 Odisha, India</span>
+          <span class="tag">🏆 Power User</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Profile Stats -->
+    <div class="profile-stats-row">
+      <div class="pstat"><strong>142</strong><span>Analyses</span></div>
+      <div class="pstat"><strong>98%</strong><span>Accuracy</span></div>
+      <div class="pstat"><strong>5</strong><span>Crop Types</span></div>
+      <div class="pstat"><strong>2 yrs</strong><span>Member Since</span></div>
+    </div>
+
+    <!-- Edit Profile Form -->
+    <div class="dash-card">
+      <h3 class="card-title">✏️ Edit Profile</h3>
+      <div class="form-row-2">
+        <div class="form-group"><label>First Name</label><input class="form-input" value="Ramesh"/></div>
+        <div class="form-group"><label>Last Name</label><input class="form-input" value="Patel"/></div>
+      </div>
+      <div class="form-group"><label>Email</label><input class="form-input" value="ramesh@kisansathi.in"/></div>
+      <div class="form-group"><label>Phone</label><input class="form-input" value="+91 9876543210"/></div>
+      <div class="form-group"><label>Location</label><input class="form-input" value="Rourkela, Odisha"/></div>
+      <div class="form-group"><label>Bio</label><textarea class="form-input" rows="3">Wheat and maize farmer from Odisha...</textarea></div>
+      <button class="btn-primary">Save Changes</button>
+    </div>
+
+    <!-- Recent Badges -->
+    <div class="dash-card">
+      <h3 class="card-title">🏅 Your Badges</h3>
+      <div class="badges-grid">
+        <div class="badge-item"><span>🌾</span><p>Wheat Expert</p></div>
+        <div class="badge-item"><span>🔬</span><p>100 Analyses</p></div>
+        <div class="badge-item locked"><span>🏆</span><p>Top Farmer</p></div>
+        <div class="badge-item locked"><span>🌍</span><p>Community Helper</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════
+     ⚙️ SECTION 8: SETTINGS
+══════════════════════════════════════════ -->
+<section id="section-settings" class="section">
+  <div class="section-inner narrow">
+    <div class="section-header">
+      <h2>Settings</h2>
+      <p class="section-sub">Manage your account preferences</p>
+    </div>
+
+    <div class="settings-group">
+      <h3 class="settings-title">🔒 Security</h3>
+      <div class="dash-card">
+        <div class="form-group"><label>Current Password</label><input type="password" class="form-input" placeholder="••••••••"/></div>
+        <div class="form-group"><label>New Password</label><input type="password" class="form-input" placeholder="••••••••"/></div>
+        <div class="form-group"><label>Confirm New Password</label><input type="password" class="form-input" placeholder="••••••••"/></div>
+        <button class="btn-primary">Update Password</button>
+      </div>
+    </div>
+
+    <div class="settings-group">
+      <h3 class="settings-title">🎨 Appearance</h3>
+      <div class="dash-card">
+        <div class="setting-row">
+          <div>
+            <strong>Dark Mode</strong>
+            <p>Toggle between light and dark theme</p>
+          </div>
+          <label class="toggle-switch">
+            <input type="checkbox" id="darkModeToggle" onchange="toggleTheme()"/>
+            <span class="toggle-slider"></span>
+          </label>
+        </div>
+        <div class="setting-row">
+          <div>
+            <strong>Compact Dashboard</strong>
+            <p>Show more content in less space</p>
+          </div>
+          <label class="toggle-switch">
+            <input type="checkbox"/>
+            <span class="toggle-slider"></span>
+          </label>
+        </div>
+        <div class="setting-row">
+          <div>
+            <strong>Language</strong>
+            <p>Choose display language</p>
+          </div>
+          <select class="form-input mini-select">
+            <option>English</option>
+            <option>Hindi</option>
+            <option>Odia</option>
+            <option>Marathi</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <div class="settings-group">
+      <h3 class="settings-title">🔔 Notifications</h3>
+      <div class="dash-card">
+        <div class="setting-row">
+          <div><strong>Email Alerts</strong><p>Receive disease alerts via email</p></div>
+          <label class="toggle-switch"><input type="checkbox" checked/><span class="toggle-slider"></span></label>
+        </div>
+        <div class="setting-row">
+          <div><strong>SMS Notifications</strong><p>Get analysis results via SMS</p></div>
+          <label class="toggle-switch"><input type="checkbox" checked/><span class="toggle-slider"></span></label>
+        </div>
+        <div class="setting-row">
+          <div><strong>Regional Disease Alerts</strong><p>Alerts for diseases in your district</p></div>
+          <label class="toggle-switch"><input type="checkbox"/><span class="toggle-slider"></span></label>
+        </div>
+      </div>
+    </div>
+
+    <div class="settings-group danger-zone">
+      <h3 class="settings-title">⚠️ Danger Zone</h3>
+      <div class="dash-card">
+        <div class="setting-row">
+          <div><strong>Delete Account</strong><p>Permanently remove your account and all data</p></div>
+          <button class="btn-danger">Delete Account</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════
+     🤖 FLOATING CHATBOT
+══════════════════════════════════════════ -->
+<div class="chatbot-container" id="chatbotContainer">
+  <div class="chat-window hidden" id="chatWindow">
+    <div class="chat-header">
+      <div class="chat-avatar">🤖</div>
+      <div>
+        <strong>Fasal Mitra</strong>
+        <small>AI Crop Assistant</small>
+      </div>
+      <button class="chat-close" onclick="toggleChatbot()">✕</button>
+    </div>
+    <div class="chat-messages" id="chatMessages">
+      <div class="chat-msg bot">
+        <span>👋 Hello! I'm Fasal Mitra, your AI crop assistant. Ask me anything about crop diseases, treatment, or how to use Kishan Sathi!</span>
+      </div>
+    </div>
+    <div class="chat-input-wrap">
+      <input type="text" class="chat-input" id="chatInput" placeholder="Ask about crop diseases..." onkeydown="chatKeydown(event)"/>
+      <button class="chat-send" onclick="sendChatMessage()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+      </button>
+    </div>
+  </div>
+  <button class="chatbot-fab" onclick="toggleChatbot()" title="Chat with AI Assistant">
+    <span class="fab-icon-open">💬</span>
+    <span class="fab-icon-close hidden">✕</span>
+  </button>
+</div>
+
+<!-- ══════════════════════════════════════════
+     🔔 TOAST NOTIFICATION
+══════════════════════════════════════════ -->
+<div class="toast" id="toast"></div>
+
+<script src="{% static 'js/script.js' %}"></script>
+</body>
+</html>
