@@ -1,0 +1,43 @@
+# ===============================================================
+# 🌱 KISHAN SATHI – Python Dependencies
+# Install with: pip install -r requirements.txt
+# ===============================================================
+
+# ── Django Core ────────────────────────────────────────────────
+Django==4.2.9
+djangorestframework==3.14.0
+django-cors-headers==4.3.1
+django-filter==23.5
+python-decouple==3.8
+
+# ── Database ───────────────────────────────────────────────────
+psycopg2-binary==2.9.9
+
+# ── Authentication ─────────────────────────────────────────────
+djangorestframework-simplejwt==5.3.1
+
+# ── Image Processing ───────────────────────────────────────────
+Pillow==10.2.0
+
+# ── PDF Generation ─────────────────────────────────────────────
+reportlab==4.1.0
+
+# ── Cloud Storage (Optional) ───────────────────────────────────
+cloudinary==1.38.0
+django-cloudinary-storage==0.3.0
+
+# ── AI / ML (Uncomment when using real model) ──────────────────
+# tensorflow==2.15.0
+# torch==2.1.0
+# torchvision==0.16.0
+# numpy==1.26.3
+# opencv-python==4.9.0.80
+
+# ── Dev / Testing ──────────────────────────────────────────────
+pytest==7.4.4
+pytest-django==4.7.0
+factory-boy==3.3.0
+
+# ── Production ─────────────────────────────────────────────────
+gunicorn==21.2.0
+whitenoise==6.6.0

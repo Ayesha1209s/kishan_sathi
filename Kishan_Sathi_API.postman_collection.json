@@ -1,0 +1,380 @@
+{
+  "info": {
+    "name": "🌱 Kishan Sathi API",
+    "description": "Complete API collection for Kishan Sathi – AI Crop Disease Detection Platform\n\n**Base URL:** http://localhost:8000/api/v1\n\n**Auth:** Bearer JWT token in Authorization header\n\n**How to use:**\n1. Run 'Register' to create account\n2. Run 'Login' → copy access token\n3. Set {{access_token}} variable\n4. All other requests use Bearer {{access_token}}",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    { "key": "base_url",      "value": "http://localhost:8000/api/v1" },
+    { "key": "access_token",  "value": "PASTE_YOUR_ACCESS_TOKEN_HERE" },
+    { "key": "refresh_token", "value": "PASTE_YOUR_REFRESH_TOKEN_HERE" },
+    { "key": "image_id",      "value": "" },
+    { "key": "report_id",     "value": "" },
+    { "key": "notif_id",      "value": "" }
+  ],
+  "item": [
+    {
+      "name": "🔐 Authentication",
+      "item": [
+        {
+          "name": "Register",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": "{{base_url}}/auth/register/",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"ramesh_patel\",\n  \"email\": \"ramesh@example.com\",\n  \"first_name\": \"Ramesh\",\n  \"last_name\": \"Patel\",\n  \"phone\": \"+919876543210\",\n  \"state\": \"Odisha\",\n  \"password\": \"SecurePass@123\",\n  \"confirm_password\": \"SecurePass@123\"\n}"
+            },
+            "description": "Register a new user. Returns JWT tokens on success.\n\n**Expected Response (201):**\n```json\n{\n  \"message\": \"Registration successful!\",\n  \"tokens\": { \"access\": \"...\", \"refresh\": \"...\" },\n  \"user\": { \"id\": 1, \"email\": \"ramesh@example.com\" }\n}\n```"
+          }
+        },
+        {
+          "name": "Login",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "var json = pm.response.json();",
+                  "if (json.access) { pm.collectionVariables.set('access_token', json.access); }",
+                  "if (json.refresh) { pm.collectionVariables.set('refresh_token', json.refresh); }"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": "{{base_url}}/auth/login/",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"ramesh@example.com\",\n  \"password\": \"SecurePass@123\"\n}"
+            },
+            "description": "Login with email + password. Auto-sets access_token variable.\n\n**Expected Response (200):**\n```json\n{\n  \"access\": \"eyJ...\",\n  \"refresh\": \"eyJ...\",\n  \"user\": { \"id\": 1, \"email\": \"...\", \"total_analyses\": 0 }\n}\n```"
+          }
+        },
+        {
+          "name": "Logout",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{access_token}}" },
+              { "key": "Content-Type",  "value": "application/json" }
+            ],
+            "url": "{{base_url}}/auth/logout/",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"refresh\": \"{{refresh_token}}\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Refresh Token",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": "{{base_url}}/auth/token/refresh/",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"refresh\": \"{{refresh_token}}\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Change Password",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{access_token}}" },
+              { "key": "Content-Type",  "value": "application/json" }
+            ],
+            "url": "{{base_url}}/auth/change-password/",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"old_password\": \"SecurePass@123\",\n  \"new_password\": \"NewPass@456\",\n  \"confirm_password\": \"NewPass@456\"\n}"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "👤 Profile",
+      "item": [
+        {
+          "name": "Get My Profile",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{access_token}}" }],
+            "url": "{{base_url}}/auth/profile/",
+            "description": "Returns full user profile including nested Profile object.\n\n**Expected Response (200):**\n```json\n{\n  \"id\": 1,\n  \"email\": \"ramesh@example.com\",\n  \"total_analyses\": 12,\n  \"profile\": {\n    \"bio\": \"Wheat farmer from Odisha\",\n    \"experience\": \"intermediate\",\n    \"farm_size\": 12.5\n  }\n}\n```"
+          }
+        },
+        {
+          "name": "Update Profile",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{access_token}}" },
+              { "key": "Content-Type",  "value": "application/json" }
+            ],
+            "url": "{{base_url}}/auth/profile/",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"first_name\": \"Ramesh\",\n  \"last_name\": \"Patel\",\n  \"phone\": \"+919876543210\",\n  \"profile\": {\n    \"bio\": \"Wheat and maize farmer from Rourkela, Odisha.\",\n    \"experience\": \"intermediate\",\n    \"farm_size\": 12.5,\n    \"primary_crops\": \"Wheat, Maize, Potato\",\n    \"district\": \"Sundergarh\"\n  }\n}"
+            }
+          }
+        },
+        {
+          "name": "Upload Profile Image",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Authorization", "value": "Bearer {{access_token}}" }],
+            "url": "{{base_url}}/auth/profile/image/",
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                { "key": "profile_image", "type": "file", "src": "/path/to/photo.jpg" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Dashboard Summary",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{access_token}}" }],
+            "url": "{{base_url}}/auth/dashboard/",
+            "description": "Returns user stats for dashboard: total uploads, disease count, recent activity.\n\n**Expected Response:**\n```json\n{\n  \"stats\": {\n    \"total_uploads\": 42,\n    \"diseases_found\": 8,\n    \"healthy_crops\": 34,\n    \"avg_confidence\": 91.4,\n    \"success_rate\": 97.6\n  },\n  \"recent_activity\": [...]\n}\n```"
+          }
+        }
+      ]
+    },
+    {
+      "name": "📷 Analysis",
+      "item": [
+        {
+          "name": "⚡ Upload + Analyze (One Step)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "var json = pm.response.json();",
+                  "if (json.image_id) { pm.collectionVariables.set('image_id', json.image_id); }"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Authorization", "value": "Bearer {{access_token}}" }],
+            "url": "{{base_url}}/analysis/upload-analyze/",
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                { "key": "image",     "type": "file",   "src": "/path/to/crop.jpg" },
+                { "key": "crop_type", "type": "text",   "value": "wheat" },
+                { "key": "notes",     "type": "text",   "value": "Spotted orange patches on leaves" }
+              ]
+            },
+            "description": "**Recommended endpoint for frontend.** Uploads crop image AND runs AI analysis in one step.\n\n**Expected Response (201):**\n```json\n{\n  \"message\": \"Upload and analysis complete.\",\n  \"image_id\": \"uuid\",\n  \"result\": {\n    \"disease_name\": \"Wheat Leaf Rust\",\n    \"confidence_score\": 94.2,\n    \"is_healthy\": false,\n    \"severity\": \"high\",\n    \"chemical_treatment\": \"Propiconazole 25% EC...\",\n    \"alternative_predictions\": [...]\n  }\n}\n```"
+          }
+        },
+        {
+          "name": "Upload Image Only",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "var json = pm.response.json();",
+                  "if (json.upload && json.upload.id) { pm.collectionVariables.set('image_id', json.upload.id); }"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Authorization", "value": "Bearer {{access_token}}" }],
+            "url": "{{base_url}}/analysis/upload/",
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                { "key": "image",     "type": "file", "src": "/path/to/crop.jpg" },
+                { "key": "crop_type", "type": "text", "value": "tomato" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Run Analysis on Uploaded Image",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Authorization", "value": "Bearer {{access_token}}" }],
+            "url": "{{base_url}}/analysis/analyze/{{image_id}}/",
+            "description": "Runs AI on a previously uploaded image. Use image_id from the upload step."
+          }
+        },
+        {
+          "name": "Get Analysis History",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{access_token}}" }],
+            "url": {
+              "raw": "{{base_url}}/analysis/history/?page=1&ordering=-uploaded_at",
+              "query": [
+                { "key": "page",      "value": "1" },
+                { "key": "ordering",  "value": "-uploaded_at" },
+                { "key": "crop_type", "value": "wheat",  "disabled": true },
+                { "key": "is_healthy","value": "false",  "disabled": true },
+                { "key": "search",    "value": "rust",   "disabled": true },
+                { "key": "uploaded_after",  "value": "2024-01-01", "disabled": true },
+                { "key": "uploaded_before", "value": "2024-12-31", "disabled": true },
+                { "key": "min_confidence",  "value": "80",         "disabled": true }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Single Analysis Detail",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{access_token}}" }],
+            "url": "{{base_url}}/analysis/history/{{image_id}}/"
+          }
+        },
+        {
+          "name": "Delete Analysis Record",
+          "request": {
+            "method": "DELETE",
+            "header": [{ "key": "Authorization", "value": "Bearer {{access_token}}" }],
+            "url": "{{base_url}}/analysis/history/{{image_id}}/"
+          }
+        },
+        {
+          "name": "Get Analytics",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{access_token}}" }],
+            "url": {
+              "raw": "{{base_url}}/analysis/analytics/?period=30",
+              "query": [{ "key": "period", "value": "30" }]
+            },
+            "description": "Returns daily chart data, top diseases, totals for the given period.\n\n**Expected Response:**\n```json\n{\n  \"period\": 30,\n  \"total_uploads\": 42,\n  \"diseases_found\": 8,\n  \"healthy_crops\": 34,\n  \"avg_confidence\": 91.4,\n  \"daily_data\": [{\"date\": \"2024-03-01\", \"count\": 3}, ...],\n  \"top_diseases\": [{\"disease_name\": \"Wheat Leaf Rust\", \"count\": 5}, ...]\n}\n```"
+          }
+        },
+        {
+          "name": "Disease Library",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/analysis/diseases/?search=rust",
+              "query": [{ "key": "search", "value": "rust" }]
+            },
+            "description": "Public endpoint. No auth required. Lists all known diseases."
+          }
+        }
+      ]
+    },
+    {
+      "name": "📄 Reports",
+      "item": [
+        {
+          "name": "Generate Single PDF Report",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "var json = pm.response.json();",
+                  "if (json.report_id) { pm.collectionVariables.set('report_id', json.report_id); }"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Authorization", "value": "Bearer {{access_token}}" }],
+            "url": "{{base_url}}/reports/generate/{{image_id}}/",
+            "description": "Generates a professional PDF report for a specific analysis.\n\n**Expected Response (201):**\n```json\n{\n  \"message\": \"PDF report generated successfully.\",\n  \"report_id\": \"uuid\",\n  \"pdf_url\": \"http://localhost:8000/media/reports/.../crop_analysis_xxx.pdf\"\n}\n```"
+          }
+        },
+        {
+          "name": "Generate Summary Report",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Authorization", "value": "Bearer {{access_token}}" }],
+            "url": {
+              "raw": "{{base_url}}/reports/generate-summary/?period=30",
+              "query": [{ "key": "period", "value": "30" }]
+            }
+          }
+        },
+        {
+          "name": "Download PDF",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{access_token}}" }],
+            "url": "{{base_url}}/reports/download/{{report_id}}/",
+            "description": "Returns the PDF as a binary download (Content-Disposition: attachment)."
+          }
+        },
+        {
+          "name": "List My Reports",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{access_token}}" }],
+            "url": "{{base_url}}/reports/"
+          }
+        }
+      ]
+    },
+    {
+      "name": "🔔 Notifications",
+      "item": [
+        {
+          "name": "Get Notifications",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{access_token}}" }],
+            "url": "{{base_url}}/notifications/",
+            "description": "Returns paginated notifications with unread_count at top level."
+          }
+        },
+        {
+          "name": "Get Unread Count",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{access_token}}" }],
+            "url": "{{base_url}}/notifications/unread-count/"
+          }
+        },
+        {
+          "name": "Mark All Read",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Authorization", "value": "Bearer {{access_token}}" }],
+            "url": "{{base_url}}/notifications/mark-all-read/"
+          }
+        },
+        {
+          "name": "Mark One Read",
+          "request": {
+            "method": "PATCH",
+            "header": [{ "key": "Authorization", "value": "Bearer {{access_token}}" }],
+            "url": "{{base_url}}/notifications/{{notif_id}}/read/"
+          }
+        },
+        {
+          "name": "Delete Notification",
+          "request": {
+            "method": "DELETE",
+            "header": [{ "key": "Authorization", "value": "Bearer {{access_token}}" }],
+            "url": "{{base_url}}/notifications/{{notif_id}}/delete/"
+          }
+        }
+      ]
+    }
+  ]
+}
