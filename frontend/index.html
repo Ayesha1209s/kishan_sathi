@@ -190,28 +190,34 @@
       </div>
 
       <!-- Login Form -->
-      <div class="auth-form" id="loginForm">
+      <form class="auth-form" id="loginForm">
         <h2>Welcome Back 👋</h2>
         <p class="form-sub">Sign in to continue your crop analysis</p>
+
         <div class="form-group">
           <label>Email Address</label>
-          <input type="email" placeholder="farmer@example.com" class="form-input"/>
+          <input type="email" id="loginEmail" placeholder="farmer@example.com" class="form-input" required />
         </div>
+
         <div class="form-group">
           <label>Password</label>
-          <input type="password" placeholder="••••••••" class="form-input"/>
+          <input type="password" id="loginPassword" placeholder="••••••••" class="form-input" required />
         </div>
+
         <div class="form-row-flex">
           <label class="check-label"><input type="checkbox"/> Remember me</label>
           <a href="#" class="link-text">Forgot Password?</a>
         </div>
-        <button class="btn-primary full" onclick="loginUser()">Sign In</button>
+
+        <button type="submit" class="btn-primary full">Sign In</button>
+
         <div class="divider"><span>or continue with</span></div>
+
         <div class="social-btns">
-          <button class="social-btn">🌐 Google</button>
-          <button class="social-btn">📱 Phone OTP</button>
+          <button type="button" class="social-btn">🌐 Google</button>
+          <button type="button" class="social-btn">📱 Phone OTP</button>
         </div>
-      </div>
+     </form>
 
       <!-- Signup Form -->
       <div class="auth-form hidden" id="signupForm">
@@ -268,7 +274,7 @@
     <div class="section-header">
       <div>
         <h2>Dashboard</h2>
-        <p class="section-sub">Welcome back, <strong>Ramesh Patel</strong> 👋 — Here's your farm summary</p>
+         Welcome back, <strong id="dashboardUsername">User</strong> 👋
       </div>
       <button class="btn-primary" onclick="showSection('upload')">+ New Analysis</button>
     </div>
@@ -604,12 +610,12 @@
     <div class="profile-header-card">
       <div class="profile-avatar-wrap">
         <div class="profile-avatar">
-          <span>R</span>
+          <span id="profileInitial">U</span>
           <button class="avatar-edit" title="Change Photo">📷</button>
         </div>
       </div>
       <div class="profile-info">
-        <h2>Ramesh Patel</h2>
+        <h2 id="profileUsername">User</h2>
         <p class="profile-bio">Wheat and maize farmer from Odisha. Using Kishan Sathi since 2023 to protect my 12-acre farm from seasonal crop diseases.</p>
         <div class="profile-tags">
           <span class="tag">🌾 Wheat Farmer</span>

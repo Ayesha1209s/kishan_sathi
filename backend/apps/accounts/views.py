@@ -13,6 +13,7 @@ from rest_framework.views import APIView
 from rest_framework_simplejwt.views import TokenObtainPairView
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework_simplejwt.exceptions import TokenError
+from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 
 from .models import Profile, UserActivity
 from .serializers import (
@@ -86,22 +87,24 @@ class RegisterView(generics.CreateAPIView):
 # ──────────────────────────────────────────────────────────────
 class LoginView(TokenObtainPairView):
     """
-    JWT login. Returns access + refresh tokens with user data.
-    Uses email as USERNAME_FIELD.
+    JWT login using DEFAULT serializer (stable).
+    Uses username field (we are passing email as username).
     """
     permission_classes = [permissions.AllowAny]
-    serializer_class   = CustomTokenObtainPairSerializer
+    serializer_class = TokenObtainPairSerializer  # ✅ FIXED
 
     def post(self, request, *args, **kwargs):
         response = super().post(request, *args, **kwargs)
 
         if response.status_code == 200:
-            # Log successful login
-            email = request.data.get('email', '')
+            # 🔥 IMPORTANT: now username = email
+            email = request.data.get('username', '')
+
             try:
-                user = User.objects.get(email=email)
+                user = User.objects.get(username=email)  # ✅ FIXED
                 UserActivity.objects.create(
-                    user=user, action='login',
+                    user=user,
+                    action='login',
                     ip_address=get_client_ip(request),
                     user_agent=request.META.get('HTTP_USER_AGENT', '')
                 )

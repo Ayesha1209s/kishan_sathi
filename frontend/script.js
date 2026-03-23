@@ -57,6 +57,7 @@ function showSection(sectionId) {
   if (sectionId === 'dashboard') initDashboardAnimations();
   if (sectionId === 'history') renderHistory();
   if (sectionId === 'result' && !state.uploadedFile) showSection('upload');
+  if (sectionId === 'profile') loadProfileName();
 
   // Close notification dropdown
   closeNotifications();
@@ -152,7 +153,7 @@ async function loginUser(email, password) {
         "Content-Type": "application/json"
       },
       body: JSON.stringify({
-        username: email,   // ✅ KEY FIX
+        email: email,
         password: password
       })
     });
@@ -163,6 +164,8 @@ async function loginUser(email, password) {
     if (res.ok) {
       localStorage.setItem("access", data.access);
       localStorage.setItem("refresh", data.refresh);
+      const username = email.split("@")[0]; // simple way
+      localStorage.setItem("username", username);
 
       showToast("✅ Login successful!");
 
@@ -247,7 +250,9 @@ async function signupUser() {
 
   } catch (err) {
     console.error(err);
-    showToast("❌ Server error");
+   const text = await res.text();
+   console.log("FULL ERROR:", text);
+   showToast("❌ " + text);
   }
 }
 
@@ -637,6 +642,8 @@ document.addEventListener('DOMContentLoaded', () => {
   // Render initial history
   renderHistory();
 
+  loadUserName();
+
   // Animate hero on load
   setTimeout(() => {
     document.querySelector('.hero-content')?.classList.add('visible');
@@ -659,18 +666,50 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 document.addEventListener("DOMContentLoaded", () => {
-  
+
   const loginForm = document.getElementById("loginForm");
 
   if (loginForm) {
     loginForm.addEventListener("submit", function(e) {
       e.preventDefault();
 
-      const email = loginForm.querySelector("input[type='email']").value;
-      const password = loginForm.querySelector("input[type='password']").value;
+      const email = document.getElementById("loginEmail").value;
+      const password = document.getElementById("loginPassword").value;
+
+      console.log("Login function called", email, password); // DEBUG
 
       loginUser(email, password);
     });
   }
 
 });
+
+function loadUserName() {
+  const username = localStorage.getItem("username");
+
+  if (username) {
+    const el = document.getElementById("dashboardUsername");
+    if (el) el.textContent = username;
+  }
+}
+
+function loadProfileName() {
+  const username = localStorage.getItem("username");
+
+  if (username) {
+    const el = document.getElementById("profileUsername");
+    if (el) el.textContent = username;
+  }
+}
+
+function loadProfileName() {
+  const username = localStorage.getItem("username");
+
+  if (username) {
+    const el = document.getElementById("profileUsername");
+    if (el) el.textContent = username;
+
+    const initial = document.getElementById("profileInitial");
+    if (initial) initial.textContent = username.charAt(0).toUpperCase();
+  }
+}
